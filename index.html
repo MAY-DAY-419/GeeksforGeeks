@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 </head>
-<body class="bg-black text-gray-100 font-['Poppins']">
+<body class="bg-black text-gray-100 font-['Poppins'] overflow-x-hidden">
     <!-- Header with Glassmorphism Effect -->
     <header class="fixed w-full z-50 backdrop-blur-md bg-black/50 border-b border-emerald-400/20">
         <div class="container mx-auto px-6 py-4">
@@ -56,7 +56,7 @@ View Events
                 </div>
             </div>
         </div>
-        <div id="code-cube" class="absolute right-10 bottom-10 w-40 h-40"></div>
+        <div id="code-cube" class="absolute right-10 bottom-10 w-40 h-40 hidden sm:block"></div>
     </section>
     <!-- About Section -->
     <section id="about" class="py-20 bg-gradient-to-b from-black to-gray-900/50">

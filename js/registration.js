@@ -29,6 +29,15 @@ document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('registration-form');
     if (!form) return;
 
+    // Enforce numeric input and 10-digit limit on phone field
+    var phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            var digits = this.value.replace(/\D/g, '').slice(0, 10);
+            this.value = digits;
+        });
+    }
+
     function showToast(message, type) {
         var toast = document.getElementById('toast');
         var body = document.getElementById('toast-body');
@@ -48,6 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = 'Submitting...';
         }
 
+        var bringLaptopEl = document.querySelector('input[name="bring_laptop"]:checked');
+        var bringOwnLaptop = bringLaptopEl ? (bringLaptopEl.value === 'yes') : null;
+
         var payload = {
             name: document.getElementById('name') ? document.getElementById('name').value.trim() : '',
             email: document.getElementById('email') ? document.getElementById('email').value.trim() : '',
@@ -57,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
             phone: document.getElementById('phone') ? document.getElementById('phone').value.trim() : '',
             upi: document.getElementById('upi') ? document.getElementById('upi').value.trim() : null,
             transaction_id: document.getElementById('transaction') ? document.getElementById('transaction').value.trim() : '',
+            bring_own_laptop: bringOwnLaptop,
             event_name: eventName ? decodeURIComponent(eventName) : document.getElementById('event-title').textContent,
             event_date: eventDate ? decodeURIComponent(eventDate) : document.getElementById('event-date').textContent
         };
@@ -74,6 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
         }
+        if (payload.bring_own_laptop === null) {
+            showToast('Please select if you will bring your own laptop.', 'error');
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Registration'; }
+            return;
+        }
 
         // Additional lightweight validations
         var emailOk = /.+@.+\..+/.test(payload.email);
@@ -84,11 +102,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Registration'; }
             return;
         }
-        var phoneOk = /^[0-9\-\s()+]{7,15}$/.test(payload.phone);
+        var phoneOk = /^\d{10}$/.test(payload.phone);
         if (!phoneOk) {
             document.getElementById('phone').setCustomValidity('Enter a valid phone number');
             document.getElementById('phone').reportValidity();
-            showToast('Invalid phone number', 'error');
+            showToast('Phone must be exactly 10 digits', 'error');
             if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Registration'; }
             return;
         }
@@ -107,14 +125,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            // Upsert to avoid duplicate registrations per (event_name, prn)
+            // Check for existing registration to enforce immutability of choices
+            var existing = await window.supabaseClient
+                .from('registrations')
+                .select('id')
+                .eq('event_name', payload.event_name)
+                .eq('prn', payload.prn)
+                .maybeSingle();
+
+            if (existing && !existing.error && existing.data) {
+                showToast('Choices already submitted and cannot be changed later.', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Registration';
+                }
+                return;
+            }
+
+            // Insert new registration
             var insertResult = await window.supabaseClient
                 .from('registrations')
-                .upsert(payload, { onConflict: 'event_name,prn' });
+                .insert(payload);
 
             if (insertResult.error) {
                 console.error(insertResult.error);
-                showToast('Failed: ' + insertResult.error.message, 'error');
+                var msg = insertResult.error.message || 'Request failed';
+                if (msg.toLowerCase().includes('column') && msg.toLowerCase().includes('bring_own_laptop')) {
+                    msg = 'Database missing bring_own_laptop column. Please add it and retry.';
+                }
+                showToast('Failed: ' + msg, 'error');
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Submit Registration';
