@@ -1,0 +1,43 @@
+/* Mobile robustness + safe-area support */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Respect device notches/status bars */
+header {
+  padding-top: env(safe-area-inset-top);
+}
+footer {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Avoid unexpected horizontal overflow from media */
+img, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Keep header items on one line and prevent wrap-induced overflow */
+header .container > div {
+  flex-wrap: nowrap;
+}
+header .container > div > * {
+  min-width: 0;
+}
+
+/* Particles background should never force horizontal scroll */
+#particles-js {
+  width: 100vw;
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Prevent hover scale causing layout shift on small screens */
+@media (max-width: 640px) {
+  a:hover, button:hover {
+    transform: none !important;
+  }
+}
+
+
