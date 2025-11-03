@@ -30,6 +30,9 @@
 
     <!-- Main Content -->
     <main class="pt-32 pb-20">
+        <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden">
+            <div id="toast-body" class="px-4 py-2 rounded-lg bg-emerald-600 text-black font-semibold shadow-lg"></div>
+        </div>
         <div id="particles-js" class="absolute inset-0"></div>
         <div class="container mx-auto px-6 relative z-10">
             <!-- Event Banner -->
@@ -121,7 +124,7 @@
                     <div class="mt-10 pt-6 border-t border-gray-700/50">
                         <h3 class="text-xl font-bold mb-4 text-emerald-400">Complete Payment to Confirm Registration</h3>
                         <div class="bg-gray-800/50 rounded-lg p-6 mb-6 flex flex-col items-center">
-                            <img src="http://static.photos/technology/320x240/42" alt="Payment QR Code" class="w-48 h-48 mb-4 rounded-lg border border-emerald-400/30">
+                            <img src="assets/qr-code.png" alt="Payment QR Code" class="w-48 h-48 mb-4 rounded-lg border border-emerald-400/30 object-contain bg-black/40">
                             <p class="text-gray-300 text-center mb-4">Scan the QR using PhonePe / GPay</p>
                             <p class="text-emerald-400 font-['JetBrains_Mono'] text-center">Amount: ₹100</p>
                         </div>
@@ -171,55 +174,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script>
-        // Initialize feather icons
-        feather.replace();
-        
-        // Initialize particles.js
-        particlesJS.load('particles-js', 'particles.json', function() {
-            console.log('Particles loaded...');
-        });
-
-        // Parse URL parameters to get event details
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const event = urlParams.get('event');
-            
-            // Update event details based on URL param
-            if (event) {
-                document.getElementById('event-title').textContent = decodeURIComponent(event);
-                // Here you would typically fetch event details from an API
-            }
-
-            // Form submission
-            document.getElementById('registration-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Simulate form submission
-                setTimeout(() => {
-                    document.getElementById('registration-form').classList.add('hidden');
-                    document.getElementById('success-message').classList.remove('hidden');
-                }, 1000);
-            });
-
-            // Countdown timer (example)
-            const eventDate = new Date();
-            eventDate.setDate(eventDate.getDate() + 5); // 5 days from now
-            updateCountdown();
-            
-            function updateCountdown() {
-                const now = new Date();
-                const diff = eventDate - now;
-                
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                
-                document.getElementById('countdown').textContent = 
-                    `Event starts in ${days} days, ${hours} hours`;
-                
-                setTimeout(updateCountdown, 3600000); // Update every hour
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/registration.js"></script>
 </body>
 </html>
