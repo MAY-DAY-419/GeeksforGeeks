@@ -3,12 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeekForGeeks</title>
+    <title>GeekforGeeks Club MITAOE </title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 </head>
-<body>
-    <h1> This Site is Under Maintence</h1>
-    
-    <script src="script.js"></script>
+<body class="bg-black text-gray-100 font-['Poppins']">
+    <!-- Header with Glassmorphism Effect -->
+    <header class="fixed w-full z-50 backdrop-blur-md bg-black/50 border-b border-emerald-400/20">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold text-emerald-400">
+                    GeekforGeeks
+                </div>
+                <nav class="hidden md:flex gap-8">
+                    <!-- <a href="#about" class="text-gray-300 hover:text-emerald-400 transition-colors duration-300 hover:glow-text">About Us</a> -->
+                    <!-- <a href="#join" class="text-gray-300 hover:text-emerald-400 transition-colors duration-300 hover:glow-text">Join Team</a> -->
+                    <a href="#login" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/50">
+                        Login
+                    </a>
+                </nav>
+                <button class="md:hidden text-emerald-400">
+                    <i data-feather="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+<!-- Hero Section -->
+    <section class="relative h-screen overflow-hidden">
+        <div id="particles-js" class="absolute inset-0"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/90 to-black/95"></div>
+<div class="container mx-auto px-6 h-full flex flex-col justify-center relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <img src="http://static.photos/technology/640x360/42" alt="Club Logo" class="w-32 h-32 mx-auto rounded-full border-2 border-green-400 p-1 glow">
+                <h1 class="text-5xl md:text-7xl font-bold mt-8 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-emerald-500">
+GeekforGeeks Club MITAOE
+                </h1>
+                <p class="text-xl md:text-2xl mb-12 text-emerald-300 font-['JetBrains_Mono']">"Where Logic Meets Creativity."</p>
+<div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <!-- <a href="#join" class="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/50">
+Join Us
+                    </a>
+                    <a href="#events" class="px-8 py-3 border-2 border-emerald-500 text-emerald-400 hover:bg-emerald-900/30 font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/30">
+View Events
+                    </a> -->
+                </div>
+            </div>
+        </div>
+        <div id="code-cube" class="absolute right-10 bottom-10 w-40 h-40"></div>
+    </section>
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gradient-to-b from-black to-gray-900/50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 text-emerald-400">About The Club</h2>
+<div class="max-w-4xl mx-auto">
+                <p class="text-xl text-center mb-16 leading-relaxed">
+                    We are MITAOE's community of passionate coders, problem solvers, and innovators. 
+                    We host coding contests, hackathons, and skill-building workshops to push the boundaries 
+                    of technology and creativity.
+                </p>
+                <div class="relative h-24 overflow-hidden">
+                    <div class="absolute flex gap-12 items-center h-full tech-scroll">
+                        <i data-feather="code" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="cpu" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="database" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="git-branch" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="github" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="terminal" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="server" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="cloud" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="code" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="cpu" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="database" class="w-16 h-16 text-emerald-400"></i>
+                        <i data-feather="git-branch" class="w-16 h-16 text-emerald-400"></i>
+                    </div>
+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="py-20 bg-gray-900/50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 text-emerald-400">Our Events</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Event Card 1 -->
+                <div class="bg-gray-800/20 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50 hover:border-emerald-400 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+                    <div class="text-emerald-400 mb-4 font-['JetBrains_Mono']">12 NOV 2025</div>
+<h3 class="text-2xl font-bold mb-3">GFG X NOVA</h3>
+                    <p class="text-gray-300 mb-6">Join us for the Competitive Coding Contest, organized by GeeksforGeeks x NOVA, where brilliant minds compete to crack algorithmic puzzles, debug complex code, and climb the leaderboard.
+                      <br>  <br>
+                   <h2> 👾 Highlights:</h2> 
+                        <br>
+1. Real-world coding problems
+<br><br>
+2. Individual participation
+<br><br>
+3. Certificates & prizes for top performers
+<br><br>
+📅 Date: 12 NOV 2025<br>
+📍 Venue: MIT AOE <br> </p>
+<br>
+                    <a href="#" class="inline-block px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 transform hover:scale-105">
+Register
+                    </a>
+                </div>
+                
+                <!-- Event Card 2 -->
+                <!-- <div class="bg-gray-800/20 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50 hover:border-emerald-400 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+                    <div class="text-emerald-400 mb-4 font-['JetBrains_Mono']">28 OCT 2023</div>
+<h3 class="text-2xl font-bold mb-3">Code Wars</h3>
+                    <p class="text-gray-300 mb-6">Competitive programming contest with prizes for top performers.</p>
+                    <a href="#" class="inline-block px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 transform hover:scale-105">
+Register
+                    </a>
+                </div> -->
+                
+                <!-- Event Card 3 -->
+                <!-- <div class="bg-gray-800/20 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50 hover:border-emerald-400 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+                    <div class="text-emerald-400 mb-4 font-['JetBrains_Mono']">12 NOV 2023</div>
+<h3 class="text-2xl font-bold mb-3">Web Dev Bootcamp</h3>
+                    <p class="text-gray-300 mb-6">Weekend workshop covering modern web development technologies.</p>
+                    <a href="#" class="inline-block px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 transform hover:scale-105">
+Register
+                    </a>
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <!-- <section class="py-20 bg-black">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 text-green-400">Our Achievements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-8 bg-gray-900 rounded-xl border border-gray-800 hover:border-green-400 transition-all duration-300">
+                    <div class="text-6xl font-bold mb-4 text-green-400 counter" data-target="200">0</div>
+                    <h3 class="text-xl font-bold">Active Members</h3>
+                </div>
+                <div class="p-8 bg-gray-900 rounded-xl border border-gray-800 hover:border-green-400 transition-all duration-300">
+                    <div class="text-6xl font-bold mb-4 text-green-400 counter" data-target="15">0</div>
+                    <h3 class="text-xl font-bold">Hackathons Organized</h3>
+                </div>
+                <div class="p-8 bg-gray-900 rounded-xl border border-gray-800 hover:border-green-400 transition-all duration-300">
+                    <div class="text-6xl font-bold mb-4 text-green-400">Top 5</div>
+                    <h3 class="text-xl font-bold">Campus Coding Club</h3>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Team Section
+    <section class="py-20 bg-gradient-to-b from-black to-gray-900/50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 text-green-400">Meet The Team</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"> -->
+                <!-- Team Member 1 -->
+                <!-- <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-green-400 transition-all duration-300 group">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gray-600 group-hover:border-green-400 transition-all duration-300">
+                        <img src="http://static.photos/people/320x240/1" alt="Team Member" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-1">Rahul Sharma</h3>
+                    <p class="text-green-400 text-center mb-4 font-['JetBrains_Mono']">President</p>
+                    <div class="flex justify-center gap-4">
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="github"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="linkedin"></i>
+                        </a>
+                    </div>
+                </div> -->
+                
+                <!-- Team Member 2 -->
+                <!-- <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-green-400 transition-all duration-300 group">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gray-600 group-hover:border-green-400 transition-all duration-300">
+                        <img src="http://static.photos/people/320x240/2" alt="Team Member" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-1">Priya Patel</h3>
+                    <p class="text-green-400 text-center mb-4 font-['JetBrains_Mono']">Vice President</p>
+                    <div class="flex justify-center gap-4">
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="github"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="linkedin"></i>
+                        </a>
+                    </div>
+                </div> -->
+                
+                <!-- Team Member 3 -->
+                <!-- <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-green-400 transition-all duration-300 group">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gray-600 group-hover:border-green-400 transition-all duration-300">
+                        <img src="http://static.photos/people/320x240/3" alt="Team Member" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-1">Amit Singh</h3>
+                    <p class="text-green-400 text-center mb-4 font-['JetBrains_Mono']">Tech Lead</p>
+                    <div class="flex justify-center gap-4">
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="github"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                 -->
+                <!-- Team Member 4 -->
+                <!-- <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-green-400 transition-all duration-300 group">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gray-600 group-hover:border-green-400 transition-all duration-300">
+                        <img src="http://static.photos/people/320x240/4" alt="Team Member" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-1">Neha Gupta</h3>
+                    <p class="text-green-400 text-center mb-4 font-['JetBrains_Mono']">Events Coordinator</p>
+                    <div class="flex justify-center gap-4">
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="github"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i data-feather="linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Testimonials Section -->
+    <!-- <section class="py-20 bg-gray-900/50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 text-green-400">What Members Say</h2>
+            <div class="max-w-3xl mx-auto text-center">
+                <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700">
+                    <p class="text-xl italic mb-6">"CodeHive transformed my coding journey. The collaborative environment and challenging events pushed me to become a better developer."</p>
+                    <p class="text-green-400 font-bold">- Rohan Deshpande</p>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Join Section -->
+    <!-- <section id="join" class="py-20 bg-black">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto bg-gradient-to-r from-green-900/30 to-green-800/30 rounded-xl p-8 border border-green-400/30">
+                <h2 class="text-4xl font-bold text-center mb-6 text-green-400">Ready to Join?</h2>
+                <p class="text-xl text-center mb-8">Become part of MITAOE's most vibrant coding community.</p>
+                <form class="max-w-md mx-auto">
+                    <div class="mb-4">
+                        <input type="text" placeholder="Your Name" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-green-400 transition-colors">
+                    </div>
+                    <div class="mb-4">
+                        <input type="email" placeholder="Email Address" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-green-400 transition-colors">
+                    </div>
+                    <div class="mb-6">
+                        <input type="text" placeholder="GitHub Profile (Optional)" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-green-400 transition-colors">
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 bg-green-500 hover:bg-green-600 text-black font-bold rounded-lg transition-all duration-300 transform hover:scale-105">
+                        Apply Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Footer Component -->
+    <script src="components/footer.js"></script>
+    <custom-footer></custom-footer>
+
+    <!-- Scripts -->
+    <script></script>
+
 </body>
 </html>
