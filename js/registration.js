@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var payload = {
             name: document.getElementById('name') ? document.getElementById('name').value.trim() : '',
             email: document.getElementById('email') ? document.getElementById('email').value.trim() : '',
+                gfg_id: document.getElementById('gfg_id') ? document.getElementById('gfg_id').value.trim() : null,
             prn: document.getElementById('roll') ? document.getElementById('roll').value.trim() : '',
             department: document.getElementById('department') ? document.getElementById('department').value : '',
             year: document.getElementById('year') ? document.getElementById('year').value : '',
