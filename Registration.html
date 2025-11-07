@@ -18,12 +18,12 @@
 <body class="bg-black text-gray-100 font-['Poppins'] overflow-x-hidden">
     <!-- Header with Glassmorphism Effect -->
     <header class="fixed w-full z-50 backdrop-blur-md bg-black/50 border-b border-emerald-400/20">
-        <div class="container mx-auto px-6 py-4">
+        <div class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div class="flex justify-between items-center">
-                <a href="index.html" class="text-2xl font-bold text-emerald-400" aria-label="Go to home">
+                <a href="index.html" class="text-xl sm:text-2xl font-bold text-emerald-400" aria-label="Go to home">
                     GeeksforGeeks
                 </a>
-                <a href="index.html" class="px-4 py-2 md:px-4 md:py-2 text-sm md:text-base bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/50">
+                <a href="index.html" class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm md:text-base bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/50">
                     Back to Home
                 </a>
             </div>
@@ -31,38 +31,31 @@
     </header>
 
     <!-- Main Content -->
-    <main class="pt-32 pb-20">
+    <main class="pt-24 sm:pt-32 pb-12 sm:pb-20">
         <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden">
             <div id="toast-body" class="px-4 py-2 rounded-lg bg-emerald-600 text-black font-semibold shadow-lg"></div>
         </div>
         <div id="particles-js" class="absolute inset-0"></div>
         <div class="container mx-auto px-6 relative z-10">
             <!-- Event Banner -->
-            <div class="max-w-4xl mx-auto mb-16 bg-gray-800/20 backdrop-blur-lg rounded-xl p-8 border border-gray-700/50 hover:border-emerald-400 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
-                <h1 id="event-title" class="text-4xl font-bold mb-4 text-emerald-400">GFG X NOVA</h1>
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="flex items-center text-emerald-400 font-['JetBrains_Mono']">
-                        <i data-feather="calendar" class="w-5 h-5 mr-2"></i>
+            <div class="max-w-4xl mx-auto mb-8 sm:mb-16 bg-gray-800/20 backdrop-blur-lg rounded-xl p-4 sm:p-8 border border-gray-700/50 hover:border-emerald-400 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+                <h1 id="event-title" class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-emerald-400">GFG X NOVA</h1>
+                <div class="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div class="flex items-center text-emerald-400 font-['JetBrains_Mono'] text-sm sm:text-base">
+                        <i data-feather="calendar" class="w-4 h-4 sm:w-5 sm:h-5 mr-2"></i>
                         <span id="event-date">12 NOV 2025</span>
                     </div>
-                    <div class="flex items-center text-emerald-400 font-['JetBrains_Mono']">
-                        <!-- <i data-feather="clock" class="w-5 h-5 mr-2"></i> -->
-                        <!-- <span id="event-time">10:00 AM - 6:00 PM</span> -->
-                    </div>
                 </div>
-                <p id="event-desc" class="text-gray-300 mb-6">Join us for the Competitive Coding Contest, organized by GeeksforGeeks x NOVA, where brilliant minds compete to crack algorithmic puzzles, debug complex code, and climb the leaderboard.
-                      <br>  <br>
-                   <h2> 👾 Highlights:</h2> 
-                        <br>
-1. Real-world coding problems
-<br><br>
-2. Individual participation
-<br><br>
-3. Certificates & prizes for top performers
-<br><br>
-<!-- 📅 Date: 12 NOV 2025<br> -->
-📍 Venue: MIT AOE <br> </p>
-<br></p>
+                <div id="event-desc" class="text-gray-300 text-sm sm:text-base">
+                    <p class="mb-4">Join us for the Competitive Coding Contest, organized by GeeksforGeeks x NOVA, where brilliant minds compete to crack algorithmic puzzles, debug complex code, and climb the leaderboard.</p>
+                    <h2 class="font-semibold mb-2">👾 Highlights:</h2>
+                    <ul class="list-disc list-inside space-y-1 ml-2 mb-4">
+                        <li>Real-world coding problems</li>
+                        <li>Individual participation</li>
+                        <li>Certificates & prizes for top performers</li>
+                    </ul>
+                    <p>📍 Venue: MIT AOE</p>
+                </div>
                 <!-- <div class="flex items-center gap-2 text-emerald-400">
                     <i data-feather="alert-circle" class="w-5 h-5"></i>
                     <span id="countdown" class="font-['JetBrains_Mono']">Event starts in 5 days, 12 hours</span>
@@ -70,31 +63,31 @@
             </div> -->
 
             <!-- Registration Form -->
-            <div class="max-w-2xl mx-auto bg-gray-800/20 backdrop-blur-lg rounded-xl p-8 border border-gray-700/50">
-                <h2 class="text-3xl font-bold mb-8 text-emerald-400">Registration Form</h2>
-                <form id="registration-form" class="space-y-6">
+            <div class="max-w-2xl mx-auto bg-gray-800/20 backdrop-blur-lg rounded-xl p-4 sm:p-8 border border-gray-700/50">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-emerald-400">Registration Form</h2>
+                <form id="registration-form" class="space-y-4 sm:space-y-6">
                     <div>
-                        <label for="name" class="block mb-2 text-gray-300">Full Name</label>
-                        <input type="text" id="name" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500">
+                        <label for="name" class="block mb-2 text-gray-300 text-sm sm:text-base">Full Name</label>
+                        <input type="text" id="name" required class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500 text-sm sm:text-base">
                     </div>
                      <div>
-                        <label for="gfg_id" class="block mb-2 text-gray-300">GeeksforGeeks ID <span class="text-sm text-gray-400"></span></label>
-                        <input type="text" id="gfg_id" placeholder="e.g. mayank123" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500">
-                        <p class="text-sm text-gray-400 mt-2">Not sure where to find your GfG ID? <a href="assets/gfg-id-reference.png" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline">See example</a></p>
+                        <label for="gfg_id" class="block mb-2 text-gray-300 text-sm sm:text-base">GeeksforGeeks ID <span class="text-xs sm:text-sm text-gray-400"></span></label>
+                        <input type="text" id="gfg_id" placeholder="e.g. mayank123" class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500 text-sm sm:text-base">
+                        <p class="text-xs sm:text-sm text-gray-400 mt-2">Not sure where to find your GfG ID? <a href="assets/gfg-id-reference.png" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline">See example</a></p>
                     </div>
                     <div>
-                        <label for="email" class="block mb-2 text-gray-300">Email (Plug in your GFG login email)</label>
-                        <input type="email" id="email" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500">
+                        <label for="email" class="block mb-2 text-gray-300 text-sm sm:text-base">Email (Plug in your GFG login email)</label>
+                        <input type="email" id="email" required class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500 text-sm sm:text-base">
                     </div>
                    
                     <div>
-                        <label for="roll" class="block mb-2 text-gray-300">PRN </label>
-                        <input type="text" id="roll" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500">
+                        <label for="roll" class="block mb-2 text-gray-300 text-sm sm:text-base">PRN </label>
+                        <input type="text" id="roll" required class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500 text-sm sm:text-base">
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         <div>
-                            <label for="department" class="block mb-2 text-gray-300">Department</label>
-                            <select id="department" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors">
+                            <label for="department" class="block mb-2 text-gray-300 text-sm sm:text-base">Department</label>
+                            <select id="department" required class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors text-sm sm:text-base">
                                 <option value="">Select Department</option>
                                 <option value="CS">Computer Science</option>
                                 <option value="SE">Software Engineering</option>
@@ -109,8 +102,8 @@
                             </select>
                         </div>
                         <div>
-                            <label for="year" class="block mb-2 text-gray-300">Year</label>
-                            <select id="year" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors">
+                            <label for="year" class="block mb-2 text-gray-300 text-sm sm:text-base">Year</label>
+                            <select id="year" required class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors text-sm sm:text-base">
                                 <option value="">Select Year</option>
                                 <option value="FE">First Year</option>
                                 <option value="SE">Second Year</option>
@@ -121,44 +114,44 @@
                     </div>
                     <!-- Bring Own Laptop -->
                     <div>
-                        <label class="block mb-2 text-gray-300">Will you bring your own laptop?</label>
-                        <div class="flex items-center gap-6">
-                            <label class="inline-flex items-center gap-2">
+                        <label class="block mb-2 text-gray-300 text-sm sm:text-base">Will you bring your own laptop?</label>
+                        <div class="flex items-center gap-4 sm:gap-6">
+                            <label class="inline-flex items-center gap-2 text-sm sm:text-base">
                                 <input type="radio" name="bring_laptop" id="bring-laptop-yes" value="yes" required class="text-emerald-500">
                                 <span>Yes</span>
                             </label>
-                            <label class="inline-flex items-center gap-2">
+                            <label class="inline-flex items-center gap-2 text-sm sm:text-base">
                                 <input type="radio" name="bring_laptop" id="bring-laptop-no" value="no" class="text-emerald-500">
                                 <span>No</span>
                             </label>
                         </div>
-                        <p class="text-sm text-emerald-300 mt-2 font-['JetBrains_Mono']">Note: Once your choices are submitted, they cannot be changed later.</p>
+                        <p class="text-xs sm:text-sm text-emerald-300 mt-2 font-['JetBrains_Mono']">Note: Once your choices are submitted, they cannot be changed later.</p>
                     </div>
                     <div>
-                        <label for="phone" class="block mb-2 text-gray-300">Phone Number </label>
-                        <input type="tel" id="phone" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="Enter 10-digit number" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500">
+                        <label for="phone" class="block mb-2 text-gray-300 text-sm sm:text-base">Phone Number </label>
+                        <input type="tel" id="phone" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="Enter 10-digit number" class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500 text-sm sm:text-base">
                     </div>
                     <div>
-                        <label for="upi" class="block mb-2 text-gray-300">UPI ID  </label>
-                        <input type="text" id="upi" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500">
+                        <label for="upi" class="block mb-2 text-gray-300 text-sm sm:text-base">UPI ID  </label>
+                        <input type="text" id="upi" class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500 text-sm sm:text-base">
                     </div>
 
                     <!-- Payment Section -->
-                    <div class="mt-10 pt-6 border-t border-gray-700/50">
-                        <h3 class="text-xl font-bold mb-4 text-emerald-400">Complete Payment to Confirm Registration</h3>
-                        <div class="bg-gray-800/50 rounded-lg p-6 mb-6 flex flex-col items-center">
-                            <img src="assets/qr-code.png" alt="Payment QR Code" class="w-48 h-48 mb-4 rounded-lg border border-emerald-400/30 object-contain bg-black/40">
-                            <p class="text-gray-300 text-center mb-4">Scan the QR using PhonePe / GPay</p>
-                            <p class="text-emerald-400 font-['JetBrains_Mono'] text-center">Amount: ₹29</p>
+                    <div class="mt-6 sm:mt-10 pt-6 border-t border-gray-700/50">
+                        <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">Complete Payment to Confirm Registration</h3>
+                        <div class="bg-gray-800/50 rounded-lg p-4 sm:p-6 mb-6 flex flex-col items-center">
+                            <img src="assets/qr-code.png" alt="Payment QR Code" class="w-40 h-40 sm:w-48 sm:h-48 mb-4 rounded-lg border border-emerald-400/30 object-contain bg-black/40">
+                            <p class="text-gray-300 text-center mb-4 text-sm sm:text-base">Scan the QR using PhonePe / GPay</p>
+                            <p class="text-emerald-400 font-['JetBrains_Mono'] text-center text-base sm:text-lg">Amount: ₹29</p>
                         </div>
                         <div>
-                            <label for="transaction" class="block mb-2 text-gray-300">Transaction ID</label>
-                            <input type="text" id="transaction" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500">
+                            <label for="transaction" class="block mb-2 text-gray-300 text-sm sm:text-base">Transaction ID</label>
+                            <input type="text" id="transaction" required class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-emerald-400 transition-colors placeholder-gray-500 text-sm sm:text-base">
                             <!-- <p class="text-sm text-gray-400 mt-2">You'll receive a confirmation email once verified.</p> -->
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg transition-all duration-300 transform hover:scale-105">
+                    <button type="submit" class="w-full px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">
                         Submit Registration
                     </button>
                 </form>
@@ -177,10 +170,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black/50 backdrop-blur-md border-t border-emerald-400/20 py-8">
-        <div class="container mx-auto px-6">
+    <footer class="bg-black/50 backdrop-blur-md border-t border-emerald-400/20 py-6 sm:py-8">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 mb-4 md:mb-0">Made with <span class="text-emerald-400">💚</span> by GeekforGeeks Club MITAOE Team</p>
+                <p class="text-gray-400 mb-4 md:mb-0 text-xs sm:text-sm text-center md:text-left">Made with <span class="text-emerald-400">💚</span> by GeekforGeeks Club MITAOE Team</p>
                 <div class="flex gap-4">
                   <a href="https://www.instagram.com/gfg.mitaoe/" 
    class="text-gray-400 hover:text-emerald-400 transition-colors"

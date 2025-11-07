@@ -1,6 +1,8 @@
 /* Mobile robustness + safe-area support */
 html, body {
   overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 /* Respect device notches/status bars */
@@ -37,6 +39,55 @@ header .container > div > * {
 @media (max-width: 640px) {
   a:hover, button:hover {
     transform: none !important;
+  }
+}
+
+/* Better mobile text sizing */
+@media (max-width: 640px) {
+  /* Reduce hero heading size on very small screens */
+  h1 {
+    font-size: 2rem !important;
+    line-height: 1.2;
+  }
+  
+  /* Adjust container padding for small screens */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Ensure event cards don't overflow */
+  .grid > div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Better spacing for mobile */
+  section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+/* Extra small screens (phones < 375px) */
+@media (max-width: 374px) {
+  h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-xl {
+    font-size: 1rem !important;
+  }
+  
+  /* Reduce padding on very small screens */
+  header .container,
+  footer .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 }
 
