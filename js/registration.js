@@ -29,6 +29,43 @@ document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('registration-form');
     if (!form) return;
 
+    // Preview screenshot when file is selected
+    var fileInput = document.getElementById('paymentss');
+    var previewContainer = document.getElementById('screenshot-preview');
+    var previewImg = document.getElementById('screenshot-preview-img');
+    
+    if (fileInput && previewContainer && previewImg) {
+        fileInput.addEventListener('change', function(e) {
+            var file = e.target.files && e.target.files[0];
+            if (file) {
+                // Validate file type and size before showing preview
+                var allowed = ['image/png', 'image/jpeg', 'image/webp'];
+                if (allowed.indexOf(file.type) === -1) {
+                    showToast('Invalid file type. Please upload PNG, JPG or WEBP.', 'error');
+                    fileInput.value = '';
+                    previewContainer.classList.add('hidden');
+                    return;
+                }
+                if (file.size > 2097152) {
+                    showToast('Screenshot exceeds 2 MB limit. Please choose a smaller file.', 'error');
+                    fileInput.value = '';
+                    previewContainer.classList.add('hidden');
+                    return;
+                }
+                
+                // Show preview
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImg.src = event.target.result;
+                    previewContainer.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.classList.add('hidden');
+            }
+        });
+    }
+
     // Enforce numeric input and 10-digit limit on phone field
     var phoneInput = document.getElementById('phone');
     if (phoneInput) {
@@ -52,19 +89,35 @@ document.addEventListener('DOMContentLoaded', function() {
         var body = document.getElementById('toast-body');
         if (!toast || !body) return;
         body.textContent = message;
-        body.className = 'px-4 py-2 rounded-lg font-semibold shadow-lg ' + (type === 'error' ? 'bg-red-500 text-black' : 'bg-emerald-600 text-black');
+        body.className = 'px-4 py-2 rounded-lg font-semibold shadow-lg ' + (type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-600 text-black');
         toast.classList.remove('hidden');
-        setTimeout(function() { toast.classList.add('hidden'); }, 2500);
+        setTimeout(function() { toast.classList.add('hidden'); }, 3500);
+    }
+
+    function setButtonLoading(isLoading) {
+        var submitBtn = document.getElementById('submit-btn');
+        var submitText = document.getElementById('submit-text');
+        var submitSpinner = document.getElementById('submit-spinner');
+        
+        if (!submitBtn || !submitText || !submitSpinner) return;
+        
+        if (isLoading) {
+            submitBtn.disabled = true;
+            submitText.textContent = 'Submitting...';
+            submitSpinner.classList.remove('hidden');
+            submitBtn.classList.add('opacity-90');
+        } else {
+            submitBtn.disabled = false;
+            submitText.textContent = 'Submit Registration';
+            submitSpinner.classList.add('hidden');
+            submitBtn.classList.remove('opacity-90');
+        }
     }
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        var submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-        }
+        setButtonLoading(true);
 
         var bringLaptopEl = document.querySelector('input[name="bring_laptop"]:checked');
         var bringOwnLaptop = bringLaptopEl ? (bringLaptopEl.value === 'yes') : null;
@@ -89,17 +142,14 @@ document.addEventListener('DOMContentLoaded', function() {
         for (var i = 0; i < requiredFields.length; i++) {
             var key = requiredFields[i];
             if (!payload[key] || payload[key].length === 0) {
-                alert('Please fill out ' + key.replace('_', ' ') + '.');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Registration';
-                }
+                showToast('Please fill out ' + key.replace('_', ' ') + '.', 'error');
+                setButtonLoading(false);
                 return;
             }
         }
         if (payload.bring_own_laptop === null) {
             showToast('Please select if you will bring your own laptop.', 'error');
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Registration'; }
+            setButtonLoading(false);
             return;
         }
 
@@ -109,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('email').setCustomValidity('Enter a valid email');
             document.getElementById('email').reportValidity();
             showToast('Invalid email address', 'error');
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Registration'; }
+            setButtonLoading(false);
             return;
         }
         // Clean phone number - remove any non-digits and ensure it's exactly 10 digits
@@ -118,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('phone').setCustomValidity('Phone must be exactly 10 digits');
             document.getElementById('phone').reportValidity();
             showToast('Phone must be exactly 10 digits', 'error');
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Registration'; }
+            setButtonLoading(false);
             return;
         }
         // Update payload with cleaned phone
@@ -129,11 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!window.supabaseClient) {
             console.error('Supabase client is not initialized.');
-            alert('Configuration error: Supabase not initialized. Please set your project keys.');
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Registration';
-            }
+            showToast('Configuration error: Supabase not initialized.', 'error');
+            setButtonLoading(false);
             return;
         }
 
@@ -147,12 +194,69 @@ document.addEventListener('DOMContentLoaded', function() {
                 .maybeSingle();
 
             if (existing && !existing.error && existing.data) {
-                showToast('Choices already submitted and cannot be changed later.', 'error');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Registration';
-                }
+                showToast('You have already registered for this event.', 'error');
+                setButtonLoading(false);
                 return;
+            }
+
+            // Handle screenshot upload (if provided)
+            // Enforce 2 MB client-side limit (2 * 1024 * 1024 = 2097152 bytes)
+            var uploadedFilePath = null;
+            var fileInput = document.getElementById('paymentss');
+            if (fileInput && fileInput.files && fileInput.files.length) {
+                var file = fileInput.files[0];
+                var allowed = ['image/png', 'image/jpeg', 'image/webp'];
+                if (allowed.indexOf(file.type) === -1) {
+                    showToast('Invalid file type. Please upload PNG, JPG or WEBP.', 'error');
+                    setButtonLoading(false);
+                    return;
+                }
+                if (file.size > 2097152) {
+                    showToast('Screenshot exceeds 2 MB limit. Please choose a smaller file.', 'error');
+                    setButtonLoading(false);
+                    return;
+                }
+
+                try {
+                    // Build a predictable path inside the bucket
+                    var safeId = (payload.prn && payload.prn.length) ? payload.prn : (payload.email ? payload.email.split('@')[0] : 'anon');
+                    // preserve extension if available
+                    var ext = '';
+                    var nameParts = (file.name || '').split('.');
+                    if (nameParts.length > 1) ext = '.' + nameParts.pop();
+                    var filePath = 'registrations/' + safeId + '-' + Date.now() + ext;
+
+                    // Upload to the configured bucket
+                    var uploadRes = await window.supabaseClient.storage
+                        .from('Payment_screenshots')
+                        .upload(filePath, file, { cacheControl: '3600', upsert: false, contentType: file.type });
+
+                    if (uploadRes.error) {
+                        console.error('Upload error', uploadRes.error);
+                        showToast('Failed to upload screenshot: ' + (uploadRes.error.message || 'Unknown error'), 'error');
+                        setButtonLoading(false);
+                        return;
+                    }
+
+                    uploadedFilePath = filePath;
+
+                    // Get public URL (works for public buckets; use createSignedUrl for private buckets)
+                    var urlRes = window.supabaseClient.storage
+                        .from('Payment_screenshots')
+                        .getPublicUrl(filePath);
+
+                    if (urlRes && urlRes.data && urlRes.data.publicUrl) {
+                        payload.screenshot_url = urlRes.data.publicUrl;
+                    }
+
+                    // Store storage path (relative to bucket) in payload so it will be saved to DB
+                    payload.screenshot_path = filePath;
+                } catch (upErr) {
+                    console.error('Unexpected upload error', upErr);
+                    showToast('Unexpected error uploading screenshot. Please try again.', 'error');
+                    setButtonLoading(false);
+                    return;
+                }
             }
 
             // Insert new registration
@@ -163,18 +267,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (insertResult.error) {
                 console.error(insertResult.error);
                 var msg = insertResult.error.message || 'Request failed';
+                
+                // If DB insert failed and we uploaded a file, attempt to clean up
+                if (uploadedFilePath) {
+                    try {
+                        await window.supabaseClient.storage
+                            .from('Payment_screenshots')
+                            .remove([uploadedFilePath]);
+                        console.log('Cleaned up uploaded file after DB error');
+                    } catch (cleanupErr) {
+                        console.error('Failed to cleanup uploaded file', cleanupErr);
+                    }
+                }
+                
                 if (msg.toLowerCase().includes('column') && msg.toLowerCase().includes('bring_own_laptop')) {
                     msg = 'Database missing bring_own_laptop column. Please add it and retry.';
                 }
-                showToast('Failed: ' + msg, 'error');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Registration';
-                }
+                showToast('Registration failed: ' + msg, 'error');
+                setButtonLoading(false);
                 return;
             }
 
             // Success UI
+            setButtonLoading(false);
             var success = document.getElementById('success-message');
             form.classList.add('hidden');
             if (success) success.classList.remove('hidden');
@@ -182,10 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (err) {
             console.error(err);
             showToast('Unexpected error. Please try again.', 'error');
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Registration';
-            }
+            setButtonLoading(false);
         }
     });
 });
