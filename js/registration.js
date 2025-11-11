@@ -1,3 +1,29 @@
+// ============================================
+// TIME MANAGEMENT (IST Timezone)
+// ============================================
+var REGISTRATION_CLOSE_TIME = new Date('2025-11-12T00:00:00+05:30'); // Nov 12, 12:00 AM IST
+var CONTEST_START_TIME = new Date('2025-11-12T15:20:00+05:30'); // Nov 12, 3:20 PM IST
+
+function getCurrentISTTime() {
+    // Get current time and convert to IST
+    var now = new Date();
+    var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    var istOffset = 5.5 * 60 * 60000; // IST is UTC+5:30
+    return new Date(utc + istOffset);
+}
+
+function getEventState() {
+    var now = getCurrentISTTime();
+    
+    if (now < REGISTRATION_CLOSE_TIME) {
+        return 'REGISTRATION_OPEN';
+    } else if (now < CONTEST_START_TIME) {
+        return 'COUNTDOWN';
+    } else {
+        return 'CONTEST_LIVE';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     if (window.feather && typeof feather.replace === 'function') {
         feather.replace();
@@ -11,6 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     } catch (_) {}
+
+    // Initialize page based on event state
+    initializePageState();
+
+    // Initialize page based on event state
+    initializePageState();
 
     // Pre-fill event details from URL params
     var urlParams = new URLSearchParams(window.location.search);
@@ -27,6 +59,215 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     var form = document.getElementById('registration-form');
+    
+    // Handle state-specific initialization
+    var state = getEventState();
+    if (state === 'REGISTRATION_OPEN' && form) {
+        initializeRegistrationForm(form, eventName, eventDate);
+    } else if (state === 'COUNTDOWN') {
+        startCountdownTimer();
+    } else if (state === 'CONTEST_LIVE') {
+        initializeLoginForm();
+    }
+});
+
+// ============================================
+// STATE MANAGEMENT
+// ============================================
+function initializePageState() {
+    var state = getEventState();
+    
+    var registrationSection = document.getElementById('registration-section');
+    var closedSection = document.getElementById('closed-section');
+    var countdownSection = document.getElementById('countdown-section');
+    var loginSection = document.getElementById('login-section');
+    var contestSection = document.getElementById('contest-section');
+    
+    // Hide all sections first
+    if (registrationSection) registrationSection.classList.add('hidden');
+    if (closedSection) closedSection.classList.add('hidden');
+    if (countdownSection) countdownSection.classList.add('hidden');
+    if (loginSection) loginSection.classList.add('hidden');
+    if (contestSection) contestSection.classList.add('hidden');
+    
+    // Show appropriate section based on state
+    if (state === 'REGISTRATION_OPEN') {
+        if (registrationSection) registrationSection.classList.remove('hidden');
+    } else if (state === 'COUNTDOWN') {
+        if (closedSection) closedSection.classList.remove('hidden');
+        if (countdownSection) countdownSection.classList.remove('hidden');
+    } else if (state === 'CONTEST_LIVE') {
+        if (closedSection) closedSection.classList.remove('hidden');
+        if (loginSection) loginSection.classList.remove('hidden');
+    }
+}
+
+// ============================================
+// COUNTDOWN TIMER
+// ============================================
+function startCountdownTimer() {
+    updateCountdown(); // Initial update
+    setInterval(updateCountdown, 1000); // Update every second
+}
+
+function updateCountdown() {
+    var now = getCurrentISTTime();
+    var diff = CONTEST_START_TIME - now;
+    
+    if (diff <= 0) {
+        // Timer ended, reload to show login
+        location.reload();
+        return;
+    }
+    
+    var hours = Math.floor(diff / (1000 * 60 * 60));
+    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    // Update timer display
+    var hoursEl = document.getElementById('timer-hours');
+    var minutesEl = document.getElementById('timer-minutes');
+    var secondsEl = document.getElementById('timer-seconds');
+    
+    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+}
+
+// ============================================
+// LOGIN FORM HANDLING
+// ============================================
+function initializeLoginForm() {
+    var loginForm = document.getElementById('contest-login-form');
+    if (!loginForm) return;
+    
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var prn = document.getElementById('login-prn').value.trim().toUpperCase();
+        var password = document.getElementById('login-password').value.trim();
+        
+        if (!prn || !password) {
+            showToast('Please fill in all fields', 'error');
+            return;
+        }
+        
+        // Validate credentials by checking against registrations
+        validateAndShowContest(prn, password);
+    });
+}
+
+async function validateAndShowContest(prn, password) {
+    if (!window.supabaseClient) {
+        showToast('System error. Please refresh and try again.', 'error');
+        return;
+    }
+    
+    try {
+        // Fetch user's registration data
+        var result = await window.supabaseClient
+            .from('registrations')
+            .select('gfg_id')
+            .eq('prn', prn)
+            .eq('event_name', 'GFG X NOVA')
+            .maybeSingle();
+        
+        if (result.error || !result.data) {
+            showToast('Invalid PRN. Please check and try again.', 'error');
+            return;
+        }
+        
+        var gfgId = result.data.gfg_id;
+        if (!gfgId || gfgId.length < 3) {
+            showToast('Invalid GFG ID in registration. Please contact support.', 'error');
+            return;
+        }
+        
+        // Generate expected password: last3ofGFGID@last3ofPRN
+        var expectedPassword = gfgId.substring(gfgId.length - 3) + '@' + prn.substring(prn.length - 3);
+        
+        if (password !== expectedPassword) {
+            showToast('Incorrect password. Format: last3ofGFGID@last3ofPRN', 'error');
+            return;
+        }
+        
+        // Credentials valid - show contest details
+        showContestDetails(prn, expectedPassword);
+        
+    } catch (err) {
+        console.error(err);
+        showToast('Error validating credentials. Please try again.', 'error');
+    }
+}
+
+function showContestDetails(username, password) {
+    var loginSection = document.getElementById('login-section');
+    var contestSection = document.getElementById('contest-section');
+    
+    if (loginSection) loginSection.classList.add('hidden');
+    if (contestSection) {
+        contestSection.classList.remove('hidden');
+        
+        // Inject credentials (not in HTML source)
+        var usernameEl = document.getElementById('contest-username');
+        var passwordEl = document.getElementById('contest-password');
+        var linkEl = document.getElementById('contest-link');
+        
+        if (usernameEl) usernameEl.textContent = username;
+        if (passwordEl) passwordEl.textContent = password;
+        if (linkEl) {
+            linkEl.href = 'https://practice.geeksforgeeks.org/contest/codearena-mitaoe-gfg-x-nova';
+            linkEl.textContent = 'Open Contest';
+        }
+        
+        // Re-initialize feather icons for the copy button
+        if (window.feather) {
+            feather.replace();
+        }
+    }
+}
+
+// Copy contest link function
+function copyContestLink() {
+    var input = document.getElementById('contest-url-text');
+    if (input) {
+        input.select();
+        input.setSelectionRange(0, 99999); // For mobile
+        
+        try {
+            document.execCommand('copy');
+            showToast('Contest link copied!', 'success');
+        } catch (err) {
+            // Fallback for modern browsers
+            navigator.clipboard.writeText(input.value).then(function() {
+                showToast('Contest link copied!', 'success');
+            }).catch(function() {
+                showToast('Failed to copy. Please copy manually.', 'error');
+            });
+        }
+    }
+}
+
+// Make copyContestLink available globally
+window.copyContestLink = copyContestLink;
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+function showToast(message, type) {
+    var toast = document.getElementById('toast');
+    var body = document.getElementById('toast-body');
+    if (!toast || !body) return;
+    body.textContent = message;
+    body.className = 'px-4 py-2 rounded-lg font-semibold shadow-lg ' + (type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-600 text-black');
+    toast.classList.remove('hidden');
+    setTimeout(function() { toast.classList.add('hidden'); }, 3500);
+}
+
+// ============================================
+// REGISTRATION FORM HANDLING
+// ============================================
+function initializeRegistrationForm(form, eventName, eventDate) {
     if (!form) return;
 
     // Preview screenshot when file is selected
@@ -84,16 +325,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function showToast(message, type) {
-        var toast = document.getElementById('toast');
-        var body = document.getElementById('toast-body');
-        if (!toast || !body) return;
-        body.textContent = message;
-        body.className = 'px-4 py-2 rounded-lg font-semibold shadow-lg ' + (type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-600 text-black');
-        toast.classList.remove('hidden');
-        setTimeout(function() { toast.classList.add('hidden'); }, 3500);
-    }
-
     function setButtonLoading(isLoading) {
         var submitBtn = document.getElementById('submit-btn');
         var submitText = document.getElementById('submit-text');
@@ -116,6 +347,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
+
+        // CHECK IF REGISTRATION IS CLOSED
+        var state = getEventState();
+        if (state !== 'REGISTRATION_OPEN') {
+            showToast('Registrations are closed. The deadline has passed.', 'error');
+            return;
+        }
 
         setButtonLoading(true);
 
@@ -301,6 +539,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setButtonLoading(false);
         }
     });
-});
+}
 
 
