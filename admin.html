@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - GeeksforGeeks Club</title>
+    <link rel="icon" type="image/png" href="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200x200-min.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-black text-gray-100 font-['Poppins']">
+    <!-- Header -->
+    <header class="fixed w-full z-50 backdrop-blur-md bg-black/50 border-b border-emerald-400/20">
+        <div class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-xl sm:text-2xl font-bold text-emerald-400">
+                    GFG Admin Dashboard
+                </div>
+                <button id="logout-btn" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-full transition-all duration-300">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 min-h-screen">
+        <div class="container mx-auto px-4 sm:px-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-emerald-400 mb-8">Welcome, Admin!</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Stats Card -->
+                <div class="bg-gray-900 border border-emerald-400/30 rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-200">Total Registrations</h3>
+                        <i data-feather="users" class="text-emerald-400"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-emerald-400" id="total-registrations">0</p>
+                </div>
+
+                <!-- Placeholder for future features -->
+                <div class="bg-gray-900 border border-emerald-400/30 rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-200">Events</h3>
+                        <i data-feather="calendar" class="text-emerald-400"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-emerald-400">1</p>
+                </div>
+
+                <div class="bg-gray-900 border border-emerald-400/30 rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-200">More Features</h3>
+                        <i data-feather="settings" class="text-emerald-400"></i>
+                    </div>
+                    <p class="text-gray-400">Coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Event Management Card -->
+                <a href="admin-events.html" class="bg-gradient-to-br from-emerald-900/50 to-emerald-800/30 border border-emerald-400/50 rounded-xl p-8 hover:from-emerald-900/70 hover:to-emerald-800/50 transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/30 transition">
+                            <i data-feather="calendar" class="text-emerald-400 w-8 h-8"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold text-white mb-2">Event Management</h3>
+                            <p class="text-gray-300 mb-4">Create and manage club events, track registrations, and build custom forms.</p>
+                            <div class="flex items-center text-emerald-400 font-medium">
+                                <span>Manage Events</span>
+                                <i data-feather="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Registration Management Card (Coming Soon) -->
+                <div class="bg-gray-900/50 border border-gray-700/50 rounded-xl p-8 opacity-60 cursor-not-allowed">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-gray-700/20 rounded-lg">
+                            <i data-feather="user-check" class="text-gray-500 w-8 h-8"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold text-gray-400 mb-2">Registration Management</h3>
+                            <p class="text-gray-500 mb-4">View and manage all user registrations for events.</p>
+                            <div class="text-gray-600 text-sm font-medium">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script>
+        // Session validation with expiry check
+        function validateSession() {
+            const adminId = sessionStorage.getItem('gfg_admin_id');
+            const adminEmail = sessionStorage.getItem('gfg_admin_email');
+            const sessionToken = sessionStorage.getItem('gfg_session_token');
+            const sessionExpiry = parseInt(sessionStorage.getItem('gfg_session_expiry') || '0');
+
+            // Check if session exists
+            if (!adminId || !adminEmail || !sessionToken) {
+                redirectToHome();
+                return false;
+            }
+
+            // Check if session expired
+            if (Date.now() > sessionExpiry) {
+                alert('Your session has expired. Please login again.');
+                clearSession();
+                redirectToHome();
+                return false;
+            }
+
+            return true;
+        }
+
+        function clearSession() {
+            sessionStorage.removeItem('gfg_admin_id');
+            sessionStorage.removeItem('gfg_admin_email');
+            sessionStorage.removeItem('gfg_session_token');
+            sessionStorage.removeItem('gfg_session_expiry');
+        }
+
+        function redirectToHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Validate session on load
+        if (!validateSession()) {
+            // Will redirect if invalid
+        } else {
+            // Session valid, show admin email
+            const adminEmail = sessionStorage.getItem('gfg_admin_email');
+            console.log('Logged in as:', adminEmail);
+        }
+
+        // Session timeout warning
+        function checkSessionExpiry() {
+            const sessionExpiry = parseInt(sessionStorage.getItem('gfg_session_expiry') || '0');
+            const timeRemaining = sessionExpiry - Date.now();
+            
+            // Warn 5 minutes before expiry
+            if (timeRemaining > 0 && timeRemaining < 5 * 60 * 1000) {
+                const minutes = Math.ceil(timeRemaining / 60000);
+                console.warn(`Session expires in ${minutes} minutes`);
+                // You can show a notification here
+            }
+
+            if (timeRemaining <= 0) {
+                alert('Session expired. Please login again.');
+                clearSession();
+                redirectToHome();
+            }
+        }
+
+        // Check session every minute
+        setInterval(checkSessionExpiry, 60000);
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            clearSession();
+            redirectToHome();
+        });
+
+        // Auto-logout on window close/tab close (optional security measure)
+        window.addEventListener('beforeunload', () => {
+            // Optionally clear session on close
+            // clearSession();
+        });
+
+        // Prevent back button after logout
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                validateSession();
+            }
+        });
+
+        // Load registration count (example)
+        async function loadStats() {
+            try {
+                const { count, error } = await window.supabaseClient
+                    .from('registrations')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (!error && count !== null) {
+                    document.getElementById('total-registrations').textContent = count;
+                }
+            } catch (err) {
+                console.error('Error loading stats:', err);
+            }
+        }
+
+        loadStats();
+    </script>
+</body>
+</html>
