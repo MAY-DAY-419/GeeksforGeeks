@@ -330,125 +330,76 @@ Register
     <script src="js/admin-login.js"></script>
     <script src="js/working-globe.js"></script>
     
-    <!-- Logo Drag and Menu Functionality -->
+    <!-- Logo Menu (Static) & Visibility Logic -->
     <script>
-        // Make logo draggable
-        let isDragging = false;
-        let currentX = 0;
-        let currentY = 0;
-        let initialX = 0;
-        let initialY = 0;
-        let xOffset = 0;
-        let yOffset = 0;
-
         const logoElement = document.getElementById('draggableLogo');
         const logoContainer = logoElement.querySelector('.logo-container');
+        const adminBtn = document.getElementById('admin-login-btn');
+        const adminModal = document.getElementById('admin-login-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const heroSection = document.querySelector('.hero-section');
 
-        logoContainer.addEventListener('mousedown', dragStart);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
-
-        // Touch events for mobile
-        logoContainer.addEventListener('touchstart', dragStart, { passive: false });
-        document.addEventListener('touchmove', drag, { passive: false });
-        document.addEventListener('touchend', dragEnd);
-
-        function dragStart(e) {
-            e.preventDefault();
-            
-            if (e.type === "touchstart") {
-                initialX = e.touches[0].clientX - xOffset;
-                initialY = e.touches[0].clientY - yOffset;
-            } else {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-            }
-
-            if (e.target === logoContainer.querySelector('img')) {
-                isDragging = true;
-            }
-        }
-
-        function drag(e) {
-            if (isDragging) {
-                e.preventDefault();
-                
-                if (e.type === "touchmove") {
-                    currentX = e.touches[0].clientX - initialX;
-                    currentY = e.touches[0].clientY - initialY;
-                } else {
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
-                }
-
-                xOffset = currentX;
-                yOffset = currentY;
-
-                logoElement.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            }
-        }
-
-        function dragEnd() {
-            isDragging = false;
-            initialX = currentX;
-            initialY = currentY;
-        }
-
-        // Toggle logo menu with shooting animation
         function toggleLogoMenu() {
-            if (!isDragging) {
-                const menu = document.getElementById('logoMenu');
-                const menuItems = menu.querySelectorAll('.logo-menu-item');
-                
-                if (menu.classList.contains('active')) {
-                    // Hide menu
-                    menuItems.forEach(item => {
-                        item.classList.remove('shooting', 'visible');
-                    });
-                    menu.classList.remove('active');
-                } else {
-                    // Show menu with shooting effect
-                    menu.classList.add('active');
-                    
-                    // Shooting sequence: Events -> Achievements -> Contact Us -> Our Team
-                    const delays = [0, 800, 1600, 2400]; // 800ms delay between each shot
-                    
-                    menuItems.forEach((item, index) => {
-                        setTimeout(() => {
-                            item.classList.add('shooting');
-                            
-                            // Add visible class after shooting animation
-                            setTimeout(() => {
-                                item.classList.add('visible');
-                            }, 800);
-                        }, delays[index]);
-                    });
-                    
-                    // Auto-close after all animations complete + 3 seconds
+            const menu = document.getElementById('logoMenu');
+            const menuItems = menu.querySelectorAll('.logo-menu-item');
+
+            if (menu.classList.contains('active')) {
+                menuItems.forEach(item => item.classList.remove('shooting', 'visible'));
+                menu.classList.remove('active');
+            } else {
+                menu.classList.add('active');
+                const delays = [0, 800, 1600, 2400];
+                menuItems.forEach((item, index) => {
                     setTimeout(() => {
-                        menuItems.forEach(item => {
-                            item.classList.remove('shooting', 'visible');
-                        });
-                        menu.classList.remove('active');
-                    }, 6000);
-                }
+                        item.classList.add('shooting');
+                        setTimeout(() => item.classList.add('visible'), 800);
+                    }, delays[index]);
+                });
+                setTimeout(() => {
+                    menuItems.forEach(item => item.classList.remove('shooting', 'visible'));
+                    menu.classList.remove('active');
+                }, 6000);
             }
         }
+
+        // Touch support (for some hybrid devices where onclick may be flaky)
+        logoContainer.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            toggleLogoMenu();
+        }, { passive: false });
+
+        // Hide logo when hero section scrolled out or modal open
+        function updateLogoVisibility() {
+            const heroRect = heroSection.getBoundingClientRect();
+            const modalVisible = !adminModal.classList.contains('hidden');
+            if (heroRect.bottom < 0 || modalVisible) {
+                logoElement.style.display = 'none';
+            } else {
+                logoElement.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('scroll', updateLogoVisibility);
+        window.addEventListener('resize', updateLogoVisibility);
+
+        adminBtn.addEventListener('click', () => {
+            logoElement.style.display = 'none';
+        });
+        closeModalBtn.addEventListener('click', () => {
+            updateLogoVisibility();
+        });
 
         // Close menu when clicking outside
         document.addEventListener('click', function(e) {
             const logoMenu = document.getElementById('logoMenu');
-            const logoContainer = document.querySelector('.logo-container');
-            
             if (!logoContainer.contains(e.target)) {
                 logoMenu.classList.remove('active');
             }
         });
+        document.getElementById('logoMenu').addEventListener('click', e => e.stopPropagation());
 
-        // Prevent menu from closing when clicking on menu items
-        document.getElementById('logoMenu').addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
+        // Initial visibility
+        updateLogoVisibility();
     </script>
 
 </body>

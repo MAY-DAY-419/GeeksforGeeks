@@ -194,13 +194,13 @@
 
 /* Draggable Logo Section */
 .logo-section {
-    position: fixed;
-    top: calc(50% - 30px);
+    position: absolute; /* Tied to hero section, will scroll away */
+    top: calc(50% + 40px);
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1100;
-    cursor: move;
     user-select: none;
+    pointer-events: auto;
 }
 
 .logo-container {
@@ -241,8 +241,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 300px;
-    height: 300px;
+    width: 100px;
+    height: 100px;
     pointer-events: none;
 }
 
