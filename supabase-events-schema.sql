@@ -2,6 +2,16 @@
 -- GFG Event Management System - Database Schema
 -- ============================================
 
+-- Ensure UUID generation function is available
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- Minimal admins table required by foreign keys and RLS checks
+CREATE TABLE IF NOT EXISTS admins (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT UNIQUE NOT NULL,
+    role TEXT DEFAULT 'admin',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 -- 1. EVENTS TABLE
 CREATE TABLE IF NOT EXISTS events (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -71,14 +81,11 @@ CREATE TABLE IF NOT EXISTS event_registrations (
     
     -- Default Fields
     full_name TEXT NOT NULL,
-    gfg_id TEXT,
     prn TEXT NOT NULL,
     email TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    department TEXT,
-    year TEXT,
+    phone TEXT,
     
-    -- Payment Info (optional - for paid events)
+    -- Payment Info
     payment_screenshot_url TEXT,
     payment_verified BOOLEAN DEFAULT false,
     
@@ -147,7 +154,7 @@ CREATE POLICY "Admins can manage all events"
     USING (
         EXISTS (
             SELECT 1 FROM admins 
-            WHERE admins.id::text = current_setting('request.jwt.claims', true)::json->>'sub'
+            WHERE admins.id::text = (current_setting('request.jwt.claims', true))::json->>'sub'
         )
     );
 
@@ -170,7 +177,7 @@ CREATE POLICY "Admins can manage custom fields"
     USING (
         EXISTS (
             SELECT 1 FROM admins 
-            WHERE admins.id::text = current_setting('request.jwt.claims', true)::json->>'sub'
+            WHERE admins.id::text = (current_setting('request.jwt.claims', true))::json->>'sub'
         )
     );
 
@@ -183,7 +190,7 @@ CREATE POLICY "Anyone can register for events"
 -- Users can view their own registrations
 CREATE POLICY "Users can view own registrations"
     ON event_registrations FOR SELECT
-    USING (email = current_setting('request.jwt.claims', true)::json->>'email');
+    USING (email = (current_setting('request.jwt.claims', true))::json->>'email');
 
 -- Admins can view/manage all registrations
 CREATE POLICY "Admins can manage all registrations"
@@ -191,7 +198,7 @@ CREATE POLICY "Admins can manage all registrations"
     USING (
         EXISTS (
             SELECT 1 FROM admins 
-            WHERE admins.id::text = current_setting('request.jwt.claims', true)::json->>'sub'
+            WHERE admins.id::text = (current_setting('request.jwt.claims', true))::json->>'sub'
         )
     );
 
@@ -202,7 +209,7 @@ CREATE POLICY "Admins can view analytics"
     USING (
         EXISTS (
             SELECT 1 FROM admins 
-            WHERE admins.id::text = current_setting('request.jwt.claims', true)::json->>'sub'
+            WHERE admins.id::text = (current_setting('request.jwt.claims', true))::json->>'sub'
         )
     );
 
@@ -227,10 +234,18 @@ CREATE TRIGGER events_updated_at_trigger
 -- Auto-generate event slug from title
 CREATE OR REPLACE FUNCTION generate_event_slug()
 RETURNS TRIGGER AS $$
+DECLARE
+    base_slug TEXT;
+    uuid_part TEXT;
 BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id := gen_random_uuid();
+    END IF;
+
     IF NEW.event_slug IS NULL OR NEW.event_slug = '' THEN
-        NEW.event_slug = lower(regexp_replace(NEW.title, '[^a-zA-Z0-9]+', '-', 'g'));
-        NEW.event_slug = NEW.event_slug || '-' || substr(NEW.id::text, 1, 8);
+        base_slug := lower(regexp_replace(NEW.title, '[^a-zA-Z0-9]+', '-', 'g'));
+        uuid_part := substr(NEW.id::text, 1, 8);
+        NEW.event_slug := base_slug || '-' || uuid_part;
     END IF;
     RETURN NEW;
 END;
@@ -270,9 +285,9 @@ ORDER BY e.event_date DESC;
 -- Sample Event
 INSERT INTO events (title, description, event_type, event_date, venue, requires_payment, payment_amount, is_visible, is_featured, is_draft)
 VALUES 
-    ('GFG Guest Session', 'Understand What Generative AI is at a Basic Level, and its appropriate usage on a daily and professional level', 'Talk', 
-     '2026-02-19T10:00:00Z', 'Online', false, 0.00, true, false, false);
+    ('Web Development Workshop', 'Learn modern web development with React and Next.js', 'Workshop', 
+     NOW() + INTERVAL '7 days', 'Computer Lab A', true, 100.00, true, true, false);
 
 COMMENT ON TABLE events IS 'Stores all GFG events with detailed configuration';
 COMMENT ON TABLE event_custom_fields IS 'Custom registration form fields for each event';
-COMMENT ON TABLE event_registrations IS 'User registrations for events with custom field responses - includes name, GFG ID, PRN, email, phone, department, and year';
+COMMENT ON TABLE event_registrations IS 'User registrations for events with custom field responses';
