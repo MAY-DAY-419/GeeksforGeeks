@@ -335,23 +335,8 @@
                     submitSpinner.classList.remove('hidden');
 
                     try {
-                        // Get the GFG Guest Session event
-                        const { data: events, error: eventError } = await window.supabaseClient
-                            .from('events')
-                            .select('id')
-                            .eq('title', 'GFG Guest Session')
-                            .single();
-
-                        if (eventError || !events) {
-                            console.error('Event not found:', eventError);
-                            throw new Error('Event not found in database');
-                        }
-
-                        const eventId = events.id;
-
                         // Collect form data
                         const registrationData = {
-                            event_id: eventId,
                             full_name: document.getElementById('name').value,
                             gfg_id: document.getElementById('gfg_id').value,
                             email: document.getElementById('email').value,
@@ -362,6 +347,35 @@
                             registration_status: 'pending'
                         };
 
+                        console.log('Attempting to register with data:', registrationData);
+
+                        // First, try to get all events to debug
+                        const { data: allEvents, error: getAllError } = await window.supabaseClient
+                            .from('events')
+                            .select('*')
+                            .limit(5);
+
+                        console.log('All events:', allEvents);
+                        console.log('Get all events error:', getAllError);
+
+                        // Get the GFG Guest Session event
+                        const { data: events, error: eventError } = await window.supabaseClient
+                            .from('events')
+                            .select('id')
+                            .ilike('title', '%Guest Session%');
+
+                        let eventId = null;
+                        
+                        if (events && events.length > 0) {
+                            eventId = events[0].id;
+                            console.log('Event found:', eventId);
+                            registrationData.event_id = eventId;
+                        } else {
+                            console.log('No event found matching "Guest Session"');
+                            console.log('Event error:', eventError);
+                            // Continue without event_id to see if that's the issue
+                        }
+
                         // Insert registration into database
                         const { data, error } = await window.supabaseClient
                             .from('event_registrations')
@@ -369,11 +383,14 @@
 
                         if (error) {
                             console.error('Registration error:', error);
-                            // Check if it's a duplicate registration
+                            console.error('Error code:', error.code);
+                            console.error('Error message:', error.message);
+                            console.error('Error details:', error.details);
+                            
                             if (error.code === '23505') {
-                                throw new Error('You have already registered with this email for this event!');
+                                throw new Error('You have already registered with this email!');
                             }
-                            throw new Error('Failed to register: ' + error.message);
+                            throw new Error('Registration failed: ' + (error.message || 'Unknown error'));
                         }
 
                         console.log('Registration successful:', data);
