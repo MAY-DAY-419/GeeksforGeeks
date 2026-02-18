@@ -424,10 +424,10 @@ Register
     </script>
 
     <!-- Event Popup (Sliding from right) -->
-    <div id="event-popup" class="fixed right-0 top-0 h-full w-80 bg-gray-900/95 backdrop-blur-lg border-l border-emerald-400/30 shadow-2xl transform translate-x-full transition-transform duration-500 ease-out z-40 overflow-y-auto">
+    <div id="event-popup" class="fixed right-0 top-0 h-full w-80 bg-gray-900/95 backdrop-blur-lg border-l border-emerald-400/30 shadow-2xl transform translate-x-full transition-transform duration-500 ease-out z-[1200] overflow-y-auto">
         <div class="p-6">
-            <!-- Close Button - Hidden, using click outside instead -->
-            <button id="close-popup" class="hidden absolute top-4 right-4 text-gray-400 hover:text-emerald-400 transition-colors">
+            <!-- Close Button -->
+            <button id="close-popup" class="absolute top-4 right-4 text-gray-400 hover:text-emerald-400 transition-colors p-2">
                 <i data-feather="x" class="w-6 h-6"></i>
             </button>
 
@@ -512,6 +512,19 @@ Register
         document.addEventListener('DOMContentLoaded', function() {
             const eventPopup = document.getElementById('event-popup');
             const popupToggleBtn = document.getElementById('popup-toggle');
+            const closePopupBtn = document.getElementById('close-popup');
+
+            // Function to close popup
+            function closePopup() {
+                eventPopup.classList.add('translate-x-full');
+                popupToggleBtn.classList.remove('hidden');
+            }
+
+            // Close popup when clicking the close button
+            closePopupBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closePopup();
+            });
 
             // Close popup when clicking anywhere outside it
             document.addEventListener('click', function(e) {
@@ -519,8 +532,7 @@ Register
                 const isClickOnToggleBtn = popupToggleBtn.contains(e.target);
                 
                 if (!isClickInsidePopup && !isClickOnToggleBtn && !eventPopup.classList.contains('translate-x-full')) {
-                    eventPopup.classList.add('translate-x-full');
-                    popupToggleBtn.classList.remove('hidden');
+                    closePopup();
                 }
             });
 
